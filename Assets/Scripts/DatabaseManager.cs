@@ -17,10 +17,10 @@ public class DatabaseManager : MonoBehaviour
 
     public void GetDragon(string dragonID)
     {
-        StartCoroutine(GET_Dragon(dragonID, SetDragonName));
+        StartCoroutine(GET_Dragon(dragonID, DisplayDragonName));
     }
 
-    private void SetDragonName(string JSONData)
+    private void DisplayDragonName(string JSONData)
     {
         dragonName.text = JSONData; //TODO : do not show all the JSON data, just the name
 
@@ -33,6 +33,7 @@ public class DatabaseManager : MonoBehaviour
 
         //transform the dragon data structure to a JSON string
         string JSON = JsonConvert.SerializeObject(newDragon);
+        
 
         //write all the JSON string into a file in /Assets/StreamingAssets
         File.WriteAllText(Application.streamingAssetsPath + "/" + newDragon.objectID+".json", JSON);
@@ -41,12 +42,12 @@ public class DatabaseManager : MonoBehaviour
     /// <summary>
     /// Get a specific dragon from the database
     /// </summary>
-    /// <param name="id">the id of the dragon want.</param>
+    /// <param name="_id">the id of the dragon want.</param>
     /// <param name="callback_OnDownloaded">the function called after the dragon's data has been downloaded.</param>
     private IEnumerator GET_Dragon(string _id, Action<string> callback_OnDownloaded)
     {
-        //request at https://parseapi.back4app.com/classes/Dragon/_id/name
-        UnityWebRequest request = new UnityWebRequest(appURL+"/"+_id+"/name", "GET");
+        //request at https://parseapi.back4app.com/classes/Dragon/_id
+        UnityWebRequest request = new UnityWebRequest(appURL+"/"+_id, "GET");
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("X-Parse-Application-Id", appKey);
         request.SetRequestHeader("X-Parse-REST-API-Key", restAPIKey);
